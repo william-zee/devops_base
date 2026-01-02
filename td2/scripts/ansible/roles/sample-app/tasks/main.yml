@@ -1,0 +1,24 @@
+- name: Add Node packages to yum
+  # On remplace 14.x par 20.x (plus stable) ou 21.x pour correspondre à la Section 2
+  shell: curl -fsSL https://rpm.nodesource.com/setup_20.x | sudo bash
+
+- name: Install Node.js
+  # Sur Amazon Linux 2023, yum fonctionne mais dnf est le gestionnaire natif
+  dnf:
+    name: nodejs
+    state: present
+
+- name: Copy sample app
+  copy:
+    src: app.js
+    dest: /home/ec2-user/app.js
+    owner: ec2-user
+    group: ec2-user
+    mode: '0755'
+
+- name: Start sample app
+  # On s'assure de bien créer le fichier PID pour l'idempotence
+  shell: "nohup node /home/ec2-user/app.js > /home/ec2-user/app.log 2>&1 & echo $! > /tmp/node-app.pid"
+  args:
+    chdir: /home/ec2-user/
+    creates: /tmp/node-app.pid
