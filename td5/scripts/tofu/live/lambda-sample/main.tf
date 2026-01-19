@@ -3,19 +3,19 @@ provider "aws" {
 }
 
 module "function" {
-  source = "github.com/william-zee/devops_base//td5/scripts/tofu/modules/lambda"
+  source = "../../modules/lambda"
   name   = "lambda-sample"
   src    = "${path.module}/src"
 }
 module "gateway" {
-  source = "github.com/william-zee/devops_base//td5/scripts/tofu/modules/api-gateway"
+  source = "../../modules/api-gateway"
   name                = "lambda-sample"
   function_arn        = module.function.function_arn
   function_name       = module.function.function_name
   api_gateway_route_key = "GET /"
 }
 module "test" {
-  source = "github.com/william-zee/devops_base//td5/scripts/tofu/modules/test-endpoint"
+  source = "../../modules/test-endpoint"
   endpoint = module.gateway.api_endpoint
 }
 
