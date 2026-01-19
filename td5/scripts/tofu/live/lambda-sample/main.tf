@@ -12,14 +12,15 @@ module "function" {
   timeout     = 5
 }
 module "gateway" {
-  source = "../../modules/api-gateway"
-  name   = "lambda-sample"
+  source       = "../../modules/api-gateway"
+  name         = "lambda-sample"
+  function_arn = module.function.function_arn
   api_gateway_routes = {
     "GET /" = module.function.function_arn
   }
 }
 module "test" {
-  source = "../../modules/test-endpoint"
+  source   = "../../modules/test-endpoint"
   endpoint = module.gateway.api_endpoint
 }
 
