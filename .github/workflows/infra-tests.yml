@@ -15,7 +15,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v3
         with:
           # Ici, on utilise le secret TEST_ROLE_ARN que tu as créé sur GitHub
-          role-to-assume: ${{ secrets.TEST_ROLE_ARN }}
+          role-to-assume: ${{ secrets.MYSECRET_WILLIAM_ZEE_ARN }}
           role-session-name: tests-${{ github.run_number }}-${{ github.actor }}
           aws-region: us-east-2
 
