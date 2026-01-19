@@ -1,0 +1,47 @@
+name: Tofu Plan
+on:
+  pull_request:
+    branches: ["main"]
+    paths: ["td5/scripts/tofu/live/lambda-sample/**"]
+
+jobs:
+  plan:
+    name: "Tofu Plan"
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write 
+      id-token: write      
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          # TON ROLE PLAN HARDCODÉ ICI
+          role-to-assume: arn:aws:iam::717892306191:role/lambda-sample-plan
+          role-session-name: plan-${{ github.run_number }}
+          aws-region: us-east-2
+
+      - name: Setup OpenTofu
+        uses: opentofu/setup-opentofu@v1
+
+      - name: Tofu Init
+        working-directory: td5/scripts/tofu/live/lambda-sample
+        run: tofu init -no-color
+
+      - name: Tofu Plan
+        id: plan
+        working-directory: td5/scripts/tofu/live/lambda-sample
+        run: tofu plan -no-color -input=false -lock=false
+
+      - name: Post Plan to PR
+        uses: peter-evans/create-or-update-comment@v4
+        if: always()
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            ## ${{ steps.plan.outcome == 'success' && '✅' || '❌' }} Tofu Plan Output
+            ```
+            ${{ steps.plan.outputs.stdout }}
+            ```
