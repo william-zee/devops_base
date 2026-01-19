@@ -13,10 +13,10 @@ module "function" {
 }
 module "gateway" {
   source = "../../modules/api-gateway"
-  name                = "lambda-sample"
-  function_arn        = module.function.function_arn
-  function_name       = module.function.function_name
-  api_gateway_route_key = "GET /"
+  name   = "lambda-sample"
+  api_gateway_routes = {
+    "GET /" = module.function.function_arn
+  }
 }
 module "test" {
   source = "../../modules/test-endpoint"
