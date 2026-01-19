@@ -3,9 +3,13 @@ provider "aws" {
 }
 
 module "function" {
-  source = "../../modules/lambda"
-  name   = "lambda-sample"
-  src    = "${path.module}/src"
+  source      = "../../modules/lambda"
+  name        = "lambda-sample"
+  src_dir     = "${path.module}/src"
+  runtime     = "nodejs20.x"
+  handler     = "index.handler"
+  memory_size = 128
+  timeout     = 5
 }
 module "gateway" {
   source = "../../modules/api-gateway"
