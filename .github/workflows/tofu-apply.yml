@@ -28,7 +28,7 @@ jobs:
 
       - name: Tofu Init
         working-directory: td5/scripts/tofu/live/lambda-sample
-        run: run: tofu init -no-color -upgrade
+        run: tofu init -no-color -upgrade
 
       - name: Tofu Apply
         id: apply
