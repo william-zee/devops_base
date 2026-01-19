@@ -2,17 +2,17 @@ provider "aws" {
   region = "us-east-2"
 }
 
-# 1. CE BLOC ÉTAIT MANQUANT : Il crée la connexion GitHub <-> AWS
 module "oidc_provider" {
-  source = "github.com/william-zee/devops_base//td5/scripts/tofu/modules/github-aws-oidc"
+  source       = "github.com/william-zee/devops_base//td5/scripts/tofu/modules/github-aws-oidc"
+  # AJOUTE CETTE LIGNE :
+  provider_url = "https://token.actions.githubusercontent.com"
 }
 
-# 2. CE BLOC CRÉE LES RÔLES : Il utilise l'ID du bloc au-dessus
 module "iam_roles" {
   source = "github.com/william-zee/devops_base//td5/scripts/tofu/modules/gh-actions-iam-roles"
 
   name              = "lambda-sample"
-  oidc_provider_arn = module.oidc_provider.oidc_provider_arn # Correction de la référence
+  oidc_provider_arn = module.oidc_provider.oidc_provider_arn
 
   enable_iam_role_for_testing = true
   enable_iam_role_for_plan    = true
