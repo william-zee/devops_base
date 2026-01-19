@@ -1,16 +1,10 @@
+resource "time_sleep" "wait" {
+  create_duration = "30s"
+}
+
 data "http" "test_endpoint" {
-  url = var.endpoint
-}
+  url    = var.endpoint
+  method = "GET"
 
-variable "endpoint" {
-  description = "L'URL à tester"
-  type        = string
-}
-
-output "status_code" {
-  value = data.http.test_endpoint.status_code
-}
-
-output "response_body" {
-  value = data.http.test_endpoint.response_body
+  depends_on = [time_sleep.wait]
 }
